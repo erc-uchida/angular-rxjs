@@ -1,0 +1,21 @@
+Observable
+    値やイベントのコレクション
+
+Observer
+    コールバックのコレクション
+        イベントが来た時に何かするコールバックをためておく
+
+Subscription
+    Observableの実行
+    実行のキャンセルも担う
+
+Operators
+    コレクションの操作
+
+Subject
+    EventEmitterと同等
+    値やイベントを複数のObserversにマルチキャストする
+
+Schedulers
+    同時実行制御のディスパッチャ
+
