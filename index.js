@@ -1,8 +1,10 @@
 var button = document.querySelector('button');
 
 // Normally register event
-button.addEventListener('click', () => console.log('Clicked!(normally event)'));
+var count = 0;
+button.addEventListener('click', () => console.log(`Clicked ${++count} times(normally event)`));
 
 // RxJS
 Rx.Observable.fromEvent(button, 'click')
-  .subscribe(() => console.log('Clicked!(RxJS)'));
+  .scan(count => count + 1, 0)
+  .subscribe(count => console.log(`Clicked ${count} times(RxJS)`));
