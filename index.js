@@ -4,9 +4,10 @@ var button = document.querySelector('button');
 var count = 0;
 var rate = 1000;
 var lastClick = Date.now() - rate;
-button.addEventListener('click', () => {
+button.addEventListener('click', (event) => {
   if (Date.now() - lastClick >= rate) {
-    console.log(`Clicked ${++count} times(normally event)`);
+    count += event.clientX;
+    console.log(count)
     lastClick = Date.now();
   }
 });
@@ -14,5 +15,6 @@ button.addEventListener('click', () => {
 // RxJS
 Rx.Observable.fromEvent(button, 'click')
   .throttleTime(1000)
-  .scan(count => count + 1, 0)
-  .subscribe(count => console.log(`Clicked ${count} times(RxJS)`));
+  .map(event => event.clientX)
+  .scan((count, clientX) => count + clientX, 0)
+  .subscribe(count => console.log(count));
