@@ -19,3 +19,18 @@ Subject
 Schedulers
     同時実行制御のディスパッチャ
 
+------------------------------------------------
+
+Consumer <- (data) <- Producer
+
+> Pull
+Consumer Active
+Producer Passive
+-> Every JavaScript Function, iterator
+
+> Push
+Consumer Passive
+Producer Active
+-> Promise, Observable(RxJS)
+
+
