@@ -33,4 +33,37 @@ Consumer Passive
 Producer Active
 -> Promise, Observable(RxJS)
 
+------------------------------------------------
+
+Core Observable concerns:
+
+- Creating Observables
+- Subscribing to Observables
+- Executing the Observable
+- Disposing Observables
+
+## Creating Observables
+Rx.Observable.create is an alias for the Observable constructor, and it takes one argument: the subscribe function.
+
+the subscribe function is the most important piece
+
+## Subscribing to Observables
+
+The Observable does not even maintain a list of attached Observers.
+
+## Executing Observables
+
+There are three types of values an Observable Execution can deliver:
+
+- "Next" notification: sends a value such as a Number, a String, an Object, etc.
+- "Error" notification: sends a JavaScript Error or exception.
+- "Complete" notification: does not send a value.
+
+## Disposing Observable Executions
+
+Because Observable Executions may be infinite, and it's common for an Observer to want to abort execution in finite time, 
+we need an API for canceling an execution.
+You can do that by returning a custom unsubscribe function from within function subscribe().
+
+
 
