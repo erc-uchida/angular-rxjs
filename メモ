@@ -108,5 +108,13 @@ ReplaySubject
 
 A ReplaySubject records multiple values from the Observable execution and replays them to new subscribers.
 
+------------------------------------------------
+
+AsyncSubject
+
+The AsyncSubject is a variant where only the last value of the Observable execution is sent to its observers, and only when the execution completes.
+
+The AsyncSubject is similar to the last() operator, in that it waits for the complete notification in order to deliver a single value.
+
 
 
