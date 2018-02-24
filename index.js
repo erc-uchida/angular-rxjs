@@ -1,19 +1,26 @@
-// var observable = Rx.Observable.interval(1000);
-// var subscription = observable.subscribe(x => console.log(x));
-// // Later:
-// // This cancels the ongoing Observable execution which
-// // was started by calling subscribe with an Observer.
-// subscription.unsubscribe();
+/** Every Subject is an Observable. */
+// var subject = new Rx.Subject();
 
-var observable1 = Rx.Observable.interval(400);
-var observable2 = Rx.Observable.interval(300);
+// subject.subscribe({
+//   next: (v) => console.log('observerA: ' + v)
+// });
+// subject.subscribe({
+//   next: (v) => console.log('observerB: ' + v)
+// });
 
-var subscription = observable1.subscribe(x => console.log('first: ' + x));
-var childSubscription = observable2.subscribe(x => console.log('second: ' + x));
+// subject.next(1);
+// subject.next(2);
 
-subscription.add(childSubscription);
+/** Every Subject is an Observer. */
+var subject = new Rx.Subject();
 
-setTimeout(() => {
-  // Unsubscribes BOTH subscription and childSubscription
-  subscription.unsubscribe();
-}, 1000);
+subject.subscribe({
+  next: (v) => console.log('observerA: ' + v)
+});
+subject.subscribe({
+  next: (v) => console.log('observerB: ' + v)
+});
+
+var observable = Rx.Observable.from([1, 2, 3]);
+
+observable.subscribe(subject); // You can subscribe providing a Subject

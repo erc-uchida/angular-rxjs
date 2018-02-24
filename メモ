@@ -82,3 +82,10 @@ A Subscription essentially just has an unsubscribe() function to release resourc
 Subscriptions can also be put together, so that a call to an unsubscribe() of one Subscription may unsubscribe multiple Subscriptions.
 Subscriptions also have a remove(otherSubscription) method, in order to undo the addition of a child Subscription.
 
+------------------------------------------------
+
+Subject
+
+A Subject is like an Observable, but can multicast to many Observers. Subjects are like EventEmitters: they maintain a registry of many listeners.
+
+
