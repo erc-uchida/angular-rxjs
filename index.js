@@ -1,26 +1,74 @@
-/** Every Subject is an Observable. */
+// var source = Rx.Observable.from([1, 2, 3]);
 // var subject = new Rx.Subject();
+// var multicasted = source.multicast(subject);
 
-// subject.subscribe({
+// // These are, under the hood, `subject.subscribe({...})`:
+// multicasted.subscribe({
 //   next: (v) => console.log('observerA: ' + v)
 // });
-// subject.subscribe({
+// multicasted.subscribe({
 //   next: (v) => console.log('observerB: ' + v)
 // });
 
-// subject.next(1);
-// subject.next(2);
+// // This is, under the hood, `source.subscribe(subject)`:
+// multicasted.connect();
 
-/** Every Subject is an Observer. */
+// var source = Rx.Observable.interval(500);
+// var subject = new Rx.Subject();
+// var multicasted = source.multicast(subject);
+// var subscription1, subscription2, subscriptionConnect;
+
+// subscription1 = multicasted.subscribe({
+//   next: (v) => console.log('observerA: ' + v)
+// });
+// // We should call `connect()` here, because the first
+// // subscriber to `multicasted` is interested in consuming values
+// subscriptionConnect = multicasted.connect();
+
+// setTimeout(() => {
+//   subscription2 = multicasted.subscribe({
+//     next: (v) => console.log('observerB: ' + v)
+//   });
+// }, 600);
+
+// setTimeout(() => {
+//   subscription1.unsubscribe();
+// }, 1200);
+
+// // We should unsubscribe the shared Observable execution here,
+// // because `multicasted` would have no more subscribers after this
+// setTimeout(() => {
+//   subscription2.unsubscribe();
+//   subscriptionConnect.unsubscribe(); // for the shared Observable execution
+// }, 2000);
+
+var source = Rx.Observable.interval(500);
 var subject = new Rx.Subject();
+var refCounted = source.multicast(subject).refCount();
+var subscription1, subscription2, subscriptionConnect;
 
-subject.subscribe({
+// This calls `connect()`, because
+// it is the first subscriber to `refCounted`
+console.log('observerA subscribed');
+subscription1 = refCounted.subscribe({
   next: (v) => console.log('observerA: ' + v)
 });
-subject.subscribe({
-  next: (v) => console.log('observerB: ' + v)
-});
 
-var observable = Rx.Observable.from([1, 2, 3]);
+setTimeout(() => {
+  console.log('observerB subscribed');
+  subscription2 = refCounted.subscribe({
+    next: (v) => console.log('observerB: ' + v)
+  });
+}, 600);
 
-observable.subscribe(subject); // You can subscribe providing a Subject
+setTimeout(() => {
+  console.log('observerA unsubscribed');
+  subscription1.unsubscribe();
+}, 1200);
+
+// This is when the shared Observable execution will stop, because
+// `refCounted` would have no more subscribers after this
+setTimeout(() => {
+  console.log('observerB unsubscribed');
+  subscription2.unsubscribe();
+}, 2000);
