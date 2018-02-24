@@ -73,4 +73,12 @@ Observers are just objects with three callbacks, one for each type of notificati
 
 you may also just provide the callbacks as arguments, without being attached to an Observer object
 
+------------------------------------------------
+
+Subscription
+
+A Subscription essentially just has an unsubscribe() function to release resources or cancel Observable executions.
+
+Subscriptions can also be put together, so that a call to an unsubscribe() of one Subscription may unsubscribe multiple Subscriptions.
+Subscriptions also have a remove(otherSubscription) method, in order to undo the addition of a child Subscription.
 

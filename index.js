@@ -1,31 +1,19 @@
-var observable = Rx.Observable.create(function subscribe(observer) {
-  try {
-    observer.next(1);
-    observer.next(2);
-    observer.next(3);
-    observer.complete();
-  } catch (err) {
-    observer.error(err); // delivers an error if it caught one
-  }
-});
+// var observable = Rx.Observable.interval(1000);
+// var subscription = observable.subscribe(x => console.log(x));
+// // Later:
+// // This cancels the ongoing Observable execution which
+// // was started by calling subscribe with an Observer.
+// subscription.unsubscribe();
 
-// var observer = {
-//   next: x => console.log('Observer got a next value: ' + x),
-//   error: err => console.error('Observer got an error: ' + err),
-//   complete: () => console.log('Observer got a complete notification'),
-// };
+var observable1 = Rx.Observable.interval(400);
+var observable2 = Rx.Observable.interval(300);
 
-// var observer = {
-//   next: x => console.log('Observer got a next value: ' + x),
-//   error: err => console.error('Observer got an error: ' + err),
-// };
+var subscription = observable1.subscribe(x => console.log('first: ' + x));
+var childSubscription = observable2.subscribe(x => console.log('second: ' + x));
 
-// observable.subscribe(observer);
+subscription.add(childSubscription);
 
-// observable.subscribe(x => console.log('Observer got a next value: ' + x));
-
-observable.subscribe(
-  x => console.log('Observer got a next value: ' + x),
-  err => console.error('Observer got an error: ' + err),
-  () => console.log('Observer got a complete notification')
-);
+setTimeout(() => {
+  // Unsubscribes BOTH subscription and childSubscription
+  subscription.unsubscribe();
+}, 1000);
