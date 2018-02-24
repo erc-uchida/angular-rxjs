@@ -96,3 +96,13 @@ A multicasted Observable uses a Subject under the hood to make multiple Observer
 
 refCount makes the multicasted Observable automatically start executing when the first subscriber arrives, and stop executing when the last subscriber leaves.
 
+------------------------------------------------
+
+BehaviorSubject
+
+BehaviorSubjects are useful for representing "values over time". For instance, an event stream of birthdays is a Subject, but the stream of a person's age would be a BehaviorSubject.
+
+
+
+
+
