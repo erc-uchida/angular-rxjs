@@ -65,5 +65,12 @@ Because Observable Executions may be infinite, and it's common for an Observer t
 we need an API for canceling an execution.
 You can do that by returning a custom unsubscribe function from within function subscribe().
 
+------------------------------------------------
+
+Observer
+
+Observers are just objects with three callbacks, one for each type of notification that an Observable may deliver.
+
+you may also just provide the callbacks as arguments, without being attached to an Observer object
 
 
