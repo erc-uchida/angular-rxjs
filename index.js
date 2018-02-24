@@ -1,14 +1,31 @@
-var subject = new Rx.BehaviorSubject(0); // 0 is the initial value
+// var subject = new Rx.ReplaySubject(3); // buffer 3 values for new subscribers
+
+// subject.subscribe({
+//   next: (v) => console.log('observerA: ' + v)
+// });
+
+// subject.next(1);
+// subject.next(2);
+// subject.next(3);
+// subject.next(4);
+
+// subject.subscribe({
+//   next: (v) => console.log('observerB: ' + v)
+// });
+
+// subject.next(5);
+
+var subject = new Rx.ReplaySubject(100, 500 /* windowTime */);
 
 subject.subscribe({
   next: (v) => console.log('observerA: ' + v)
 });
 
-subject.next(1);
-subject.next(2);
+var i = 1;
+setInterval(() => subject.next(i++), 200);
 
-subject.subscribe({
-  next: (v) => console.log('observerB: ' + v)
-});
-
-subject.next(3);
+setTimeout(() => {
+  subject.subscribe({
+    next: (v) => console.log('observerB: ' + v)
+  });
+}, 1000);

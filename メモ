@@ -102,7 +102,11 @@ BehaviorSubject
 
 BehaviorSubjects are useful for representing "values over time". For instance, an event stream of birthdays is a Subject, but the stream of a person's age would be a BehaviorSubject.
 
+------------------------------------------------
 
+ReplaySubject
+
+A ReplaySubject records multiple values from the Observable execution and replays them to new subscribers.
 
 
 
