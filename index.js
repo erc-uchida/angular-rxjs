@@ -1,48 +1,52 @@
-/**
- * What are operators?
- *
- * An Operator is a function which creates a new Observable based on the current Observable. This is a pure operation: the previous Observable stays unmodified.
+/** 
+ * we take the usual simple Observable that emits values 1, 2, 3 synchronously, and use the operator observeOn to specify the async scheduler to use for delivering those values.
  */
-// function multiplyByTen(input) {
-//   var output = Rx.Observable.create(function subscribe(observer) {
-//     input.subscribe({
-//       next: (v) => observer.next(10 * v),
-//       error: (err) => observer.error(err),
-//       complete: () => observer.complete()
-//     });
-//   });
-//   return output;
-// }
+// var observable = Rx.Observable.create(function (observer) {
+//   observer.next(1);
+//   observer.next(2);
+//   observer.next(3);
+//   observer.complete();
+// })
+// .observeOn(Rx.Scheduler.async);
 
-// var input = Rx.Observable.from([1, 2, 3, 4]);
-// var output = multiplyByTen(input);
-// output.subscribe(x => console.log(x));
+// console.log('just before subscribe');
+// observable.subscribe({
+//   next: x => console.log('got value ' + x),
+//   error: err => console.error('something wrong occurred: ' + err),
+//   complete: () => console.log('done'),
+// });
+// console.log('just after subscribe');
+
+var observable = Rx.Observable.create(function (proxyObserver) {
+  proxyObserver.next(1);
+  proxyObserver.next(2);
+  proxyObserver.next(3);
+  proxyObserver.complete();
+})
+.observeOn(Rx.Scheduler.async);
+
+var finalObserver = {
+  next: x => console.log('got value ' + x),
+  error: err => console.error('something wrong occurred: ' + err),
+  complete: () => console.log('done'),
+};
+
+console.log('just before subscribe');
+observable.subscribe(finalObserver);
+console.log('just after subscribe');
 
 /**
- * Instance operators versus static operators
- *
- * Instance operators are functions that use the this keyword to infer what is the input Observable.
+ * The proxyObserver is created in observeOn(Rx.Scheduler.async), and its next(val) function is approximately the following:
+
+ var proxyObserver = {
+  next: (val) => {
+    Rx.Scheduler.async.schedule(
+      (x) => finalObserver.next(x),
+      0, // delay,
+      val // will be the x for the function above
+    );
+  },
+
+  // ...
+}
  */
-// Rx.Observable.prototype.multiplyByTen = function multiplyByTen() {
-//   var input = this;
-//   return Rx.Observable.create(function subscribe(observer) {
-//     input.subscribe({
-//       next: (v) => observer.next(10 * v),
-//       error: (err) => observer.error(err),
-//       complete: () => observer.complete()
-//     });
-//   });
-// }
-
-// var observable = Rx.Observable.from([1, 2, 3, 4]).multiplyByTen();
-
-// observable.subscribe(x => console.log(x));
-
-/** Static operators are pure functions attached to the Observable class, and usually are used to create Observables from scratch. */
-// var observable = Rx.Observable.interval(1000 /* number of milliseconds */);
-
-// Some Combination Operators may be static
-var observable1 = Rx.Observable.interval(1000);
-var observable2 = Rx.Observable.interval(400);
-
-var merged = Rx.Observable.merge(observable1, observable2);

@@ -116,5 +116,35 @@ The AsyncSubject is a variant where only the last value of the Observable execut
 
 The AsyncSubject is similar to the last() operator, in that it waits for the complete notification in order to deliver a single value.
 
+------------------------------------------------
 
+# Scheduler
+
+A scheduler controls when a subscription starts and when notifications are delivered. It consists of three components.
+
+A Scheduler is a data structure.
+    It knows how to store and queue tasks based on priority or other criteria.
+A Scheduler is an execution context.
+    It denotes where and when the task is executed (e.g. immediately, or in another callback mechanism such as setTimeout or process.nextTick, or the animation frame).
+A Scheduler has a (virtual) clock.
+    It provides a notion of "time" by a getter method now() on the scheduler. Tasks being scheduled on a particular scheduler will adhere only to the time denoted by that clock.
+
+A Scheduler lets you define in what execution context will an Observable deliver notifications to its Observer.
+
+This is specially useful in testing, where a virtual time Scheduler may be used to fake wall-clock time while in reality executing scheduled tasks synchronously.
+
+## Scheduler Types
+- null
+- Rx.Scheduler.queue
+- Rx.Scheduler.asap
+- Rx.Scheduler.async
+
+## Using Schedulers
+Because RxJS uses the least concurrency scheduler, you can pick a different scheduler if you want to introduce concurrency for performance purpose. 
+
+Static creation operators usually take a Scheduler as argument. 
+
+Use subscribeOn to schedule in what context will the subscribe() call happen.
+Use observeOn to schedule in what context will notifications be delivered.
+Instance operators may take a Scheduler as argument.
 
