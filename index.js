@@ -1,15 +1,22 @@
-var asyncSubject = new Rx.AsyncSubject();
+var observable = Rx.Observable.create(observer => {
+  observer.next(1);
+  setTimeout(() => {
+    observer.next(2);
+    observer.complete();
+  }, 1000);
+});
 
-asyncSubject.subscribe(
-  value => console.log(value),
-  err => console.log(err)
+var subscription = observable.subscribe(
+  value => {
+    console.log(value);
+    if (value === 1) {
+      setTimeout(() => {
+        // ここでunsubscribeしても、Observableが値を流したあとなら、その値は流れてくる
+        subscription.unsubscribe();
+      }, 2000);
+    }
+  },
+  err => console.log(err),
+  () => console.log('complete')
 );
 
-asyncSubject.next(1);
-asyncSubject.next(2);
-asyncSubject.next(3);
-asyncSubject.next(4);
-
-// エラーが発生した場合は最後のnextには値が流れない
-asyncSubject.next(5);
-asyncSubject.error('error');
